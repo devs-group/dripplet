@@ -5,6 +5,55 @@ chrome.runtime.onInstalled.addListener((): void => {
   console.log('Extension installed')
 })
 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'login') {
+    const clientId = '34932676923-luth1cmkkhoqhq3kaoealqj2poosaln4.apps.googleusercontent.com';
+    const redirectUri = chrome.identity.getRedirectURL();
+    const scopes = [
+      'openid',
+      'email',
+      'profile',
+    ].join(' ');
+
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `client_id=${clientId}&` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+      `response_type=token&` +
+      `scope=${encodeURIComponent(scopes)}`;
+
+    chrome.identity.launchWebAuthFlow(
+      {
+        url: authUrl,
+        interactive: true,
+      },
+      (redirectUrl) => {
+        if (chrome.runtime.lastError || !redirectUrl) {
+          sendResponse({ success: false, error: chrome.runtime.lastError?.message || 'Authentication failed' });
+          return;
+        }
+
+        // Extract the access token from the redirect URL
+        const params = new URLSearchParams(new URL(redirectUrl).hash.substring(1));
+        const accessToken = params.get('access_token');
+
+        if (!accessToken) {
+          sendResponse({ success: false, error: 'No access token received' });
+          return;
+        }
+
+        // Store the access token securely
+        chrome.storage.local.set({ accessToken }, () => {
+          sendResponse({ success: true, accessToken });
+        });
+      }
+    );
+
+    // Keep the message channel open for sendResponse
+    return true;
+  }
+});
+
+
 let previousTabId = 0
 
 // communication example: send previous tab title from background page
