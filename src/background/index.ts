@@ -7,7 +7,8 @@ chrome.runtime.onInstalled.addListener((): void => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'login') {
-    const clientId = VITE_GOOGLE_OAUTH2_CLIENTID;
+    
+    const clientId = chrome.runtime.getManifest().oauth2?.client_id;
     const redirectUri = chrome.identity.getRedirectURL();
     const scopes = [
       'openid',

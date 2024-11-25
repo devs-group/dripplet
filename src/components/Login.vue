@@ -1,27 +1,27 @@
 <template>
-  <div class="login-container">
+  <div class="login-container w-full p-5 text-center">
     <div v-if="!isAuthenticated" class="login-section">
-      <div class="login-header">
-        <img src="../assets/icon.svg" alt="Dripplet Logo" class="logo" />
-        <h2>Welcome to Dripplet</h2>
-        <p>Sign in to start earning rewards</p>
+      <div class="login-header mb-6">
+        <img src="../assets/icon.svg" alt="Dripplet Logo" class="logo w-16 h-16 mb-4" />
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Welcome to Dripplet</h2>
+        <p class="text-gray-600 text-sm">Sign in to start earning rewards</p>
       </div>
-      <button @click="handleLogin" class="login-button" :disabled="loading">
-        <img src="../assets/google.svg" alt="Google" class="google-icon" v-if="!loading" />
-        <span v-if="loading" class="loading-spinner"></span>
+      <button @click="handleLogin" class="login-button flex items-center justify-center w-full p-3 bg-white border border-gray-300 rounded text-gray-700 text-sm cursor-pointer transition hover:bg-gray-100 hover:shadow disabled:opacity-70 disabled:cursor-not-allowed" :disabled="loading">
+        <img src="../assets/google.svg" alt="Google" class="google-icon w-4 h-4 mr-2" v-if="!loading" />
+        <span v-if="loading" class="loading-spinner w-4 h-4 mr-2 border-2 border-gray-200 border-t-blue-500 rounded-full animate-spin"></span>
         {{ loading ? 'Signing in...' : 'Continue with Google' }}
       </button>
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="error" class="error-message text-red-600 mt-3 text-xs">{{ error }}</p>
     </div>
-    <div v-else class="logged-in-section">
-      <div class="user-info" v-if="userProfile">
-        <img :src="userProfile.picture" alt="Profile" class="profile-picture" />
+    <div v-else class="logged-in-section text-left">
+      <div class="user-info flex items-center mb-4 p-3 bg-gray-100 rounded">
+        <img :src="userProfile.picture" alt="Profile" class="profile-picture w-12 h-12 rounded-full mr-3" />
         <div class="user-details">
-          <h3>{{ userProfile.name }}</h3>
-          <p>{{ userProfile.email }}</p>
+          <h3 class="text-base text-gray-900 mb-1">{{ userProfile.name }}</h3>
+          <p class="text-xs text-gray-600">{{ userProfile.email }}</p>
         </div>
       </div>
-      <button @click="handleLogout" class="logout-button">
+      <button @click="handleLogout" class="logout-button w-full p-2 bg-red-600 text-white rounded text-sm cursor-pointer transition hover:bg-red-500">
         Sign Out
       </button>
     </div>
@@ -111,133 +111,3 @@ defineExpose({
   userProfile
 })
 </script>
-
-<style scoped>
-.login-container {
-  width: 100%;
-  padding: 20px;
-  text-align: center;
-}
-
-.login-header {
-  margin-bottom: 24px;
-}
-
-.logo {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 16px;
-}
-
-h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-}
-
-p {
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.login-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 12px;
-  background-color: #ffffff;
-  border: 1px solid #dadce0;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #3c4043;
-  cursor: pointer;
-  transition: background-color 0.2s, box-shadow 0.2s;
-}
-
-.login-button:hover {
-  background-color: #f8f9fa;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.login-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.google-icon {
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-}
-
-.loading-spinner {
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.error-message {
-  color: #dc3545;
-  margin-top: 12px;
-  font-size: 0.85rem;
-}
-
-.logged-in-section {
-  text-align: left;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-  padding: 12px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
-
-.profile-picture {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  margin-right: 12px;
-}
-
-.user-details h3 {
-  font-size: 1rem;
-  margin: 0 0 4px 0;
-  color: #1a1a1a;
-}
-
-.user-details p {
-  font-size: 0.85rem;
-  margin: 0;
-  color: #666;
-}
-
-.logout-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.logout-button:hover {
-  background-color: #c82333;
-}
-</style>
