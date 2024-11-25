@@ -58,12 +58,13 @@
   </main>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import {
   solanaPublicKeyStorage,
   trackBrowsingStorage,
   trackInteractionsStorage,
-  crawlWebsitesStorage
+  crawlWebsitesStorage,
+  accessTokenStorage
 } from '~/logic/storage'
 import Login from '../components/Login.vue'
 
@@ -71,6 +72,8 @@ const trackBrowsing = ref(false)
 const trackInteractions = ref(false)
 const crawlWebsites = ref(false)
 
+const isAuthenticated = computed(() => !!accessTokenStorage.value)
+console.log('isAuthenticated', isAuthenticated)
 onMounted(() => {
   trackBrowsing.value = trackBrowsingStorage.value
   trackInteractions.value = trackInteractionsStorage.value

@@ -13,7 +13,7 @@
       </button>
       <p v-if="error" class="error-message text-red-600 mt-3 text-xs">{{ error }}</p>
     </div>
-    <div v-else class="logged-in-section text-left">
+    <div v-else-if="isAuthenticated && userProfile" class="logged-in-section text-left">
       <div class="user-info flex items-center mb-4 p-3 bg-gray-100 rounded">
         <img :src="userProfile.picture" alt="Profile" class="profile-picture w-12 h-12 rounded-full mr-3" />
         <div class="user-details">
@@ -29,7 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { accessTokenStorage } from '~/logic/storage'
 
 interface UserProfile {
   name: string
@@ -37,7 +38,7 @@ interface UserProfile {
   picture: string
 }
 
-const isAuthenticated = ref(false)
+const isAuthenticated = computed(() => !!accessTokenStorage.value)
 const loading = ref(false)
 const error = ref<string | null>(null)
 const userProfile = ref<UserProfile | null>(null)
@@ -52,7 +53,7 @@ const handleLogin = async () => {
     })
 
     if (response && response.success) {
-      isAuthenticated.value = true
+      accessTokenStorage.value = response.accessToken
       await fetchUserProfile(response.accessToken)
     } else {
       error.value = response.error || 'Login failed. Please try again.'
@@ -66,7 +67,7 @@ const handleLogin = async () => {
 
 const handleLogout = async () => {
   chrome.storage.local.remove(['accessToken', 'userProfile'], () => {
-    isAuthenticated.value = false
+    accessTokenStorage.value = null
     userProfile.value = null
   })
 }
@@ -100,14 +101,9 @@ const fetchUserProfile = async (accessToken: string) => {
 onMounted(async () => {
   chrome.storage.local.get(['accessToken', 'userProfile'], (result) => {
     if (result.accessToken) {
-      isAuthenticated.value = true
+      accessTokenStorage.value = result.accessToken
       userProfile.value = result.userProfile || null
     }
   })
-})
-
-defineExpose({
-  isAuthenticated,
-  userProfile
 })
 </script>
