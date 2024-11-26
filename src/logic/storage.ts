@@ -23,3 +23,7 @@ export const trackInteractionsStorage = useLocalStorage(
 export const crawlWebsitesStorage = useLocalStorage('crawl-websites', 'true', {
   listenToStorageChanges: true
 })
+
+export const accessTokenStorage = useLocalStorage<string | null>('access-token', null, {
+  listenToStorageChanges: true
+})

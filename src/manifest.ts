@@ -1,14 +1,21 @@
 import type { Manifest } from 'webextension-polyfill'
 import pkg from '../package.json'
 import { IS_DEV, PORT } from '../scripts/utils'
+interface ExtendedWebExtensionManifest extends Manifest.WebExtensionManifest {
+  oauth2?: {
+    client_id: string;
+    scopes: string[];
+  };
+}
 
-export async function getManifest(): Promise<Manifest.WebExtensionManifest> {
+export async function getManifest(): Promise<ExtendedWebExtensionManifest> {
   // update this file to update this manifest.json
   // can also be conditional based on your need
 
-  const manifest: Manifest.WebExtensionManifest = {
+  const manifest: ExtendedWebExtensionManifest= {
     manifest_version: 3,
     name: pkg.displayName || pkg.name,
+    
     version: pkg.version,
     description: pkg.description,
     action: {
@@ -34,13 +41,31 @@ export async function getManifest(): Promise<Manifest.WebExtensionManifest> {
       128: './assets/icon-512.png'
     },
     permissions: [
-      'contextMenus',
+      'scripting',
+      'identity',
       'storage',
       'tabs',
+      'contextMenus',
       'webRequest',
       'storage',
       'activeTab'
     ],
+    host_permissions: [
+      'http://*/*',
+      'https://*/*',
+      'http://localhost:1991/*'
+    ],
+    oauth2: {
+      client_id: '34932676923-luth1cmkkhoqhq3kaoealqj2poosaln4.apps.googleusercontent.com',
+      scopes: [
+        'openid',
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile'
+      ]
+    },
     web_accessible_resources: [
       {
         resources: ['core/inpage_scripts/sdk_page_script.js', './assets/*'],

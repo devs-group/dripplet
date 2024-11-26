@@ -10,11 +10,14 @@ import windiConfig from './windi.config'
 
 const port = parseInt(process.env.PORT || '') || 3309
 const r = (...args: string[]) => resolve(__dirname, ...args)
-
+const DEV_GOOGLE_OAUTH2_CLIENT_ID = "34932676923-luth1cmkkhoqhq3kaoealqj2poosaln4.apps.googleusercontent.com"
 export default defineConfig(({ command }) => {
   const isDev = command === 'serve'
 
   return {
+    define: {
+      'VITE_GOOGLE_OAUTH2_CLIENTID': isDev ? JSON.stringify(DEV_GOOGLE_OAUTH2_CLIENT_ID) : undefined,
+    },
     root: r('src'),
     base: isDev ? `http://localhost:${port}/` : undefined,
     resolve: {
