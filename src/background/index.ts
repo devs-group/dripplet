@@ -89,3 +89,8 @@ onMessage('get-current-tab', async () => {
     }
   }
 })
+
+onMessage('page-info', ({ data }) => {
+  console.log("page-info", data)
+})
+
