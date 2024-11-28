@@ -24,6 +24,6 @@ export function collectUserData() {
         ? getPermissions()
         : 'Permissions API not supported'
     }
-    //sendMessage('user-data', userData, 'background');
     console.log('[chrome-ext-mv3-starter] User data collected:', userData);
+    sendMessage('user-data', userData, 'background');
   }

@@ -18,6 +18,5 @@ export function trackLoadedScriptsAndDetectTechnologies() {
     }
   
     console.log('[chrome-ext-mv3-starter] Detected technologies:', technologies);
-   // sendMessage('detected-technologies', technologies, 'background');
+    sendMessage('loaded-scripts', { scripts: loadedScripts, technologies }, 'background');
   }
-  
