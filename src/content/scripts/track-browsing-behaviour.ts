@@ -7,6 +7,5 @@ export function trackBrowsingBehavior() {
       path: window.location.pathname,
       timestamp: new Date().toISOString()
     }
-    console.log('[chrome-ext-mv3-starter] Browsing data:', browsingData)
     sendMessage('browsing-behaviour', browsingData, 'background')
   }

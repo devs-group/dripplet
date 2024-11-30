@@ -5,7 +5,6 @@ export function trackLoadedScriptsAndDetectTechnologies() {
     const loadedScripts = [...document.scripts].map(
       (script) => script.src || 'inline script'
     )
-    console.log('[chrome-ext-mv3-starter] Loaded scripts:', loadedScripts)
   
     const technologies = {
       angular: !!window.angular,
@@ -17,6 +16,5 @@ export function trackLoadedScriptsAndDetectTechnologies() {
       stripe: !!window.Stripe
     }
   
-    console.log('[chrome-ext-mv3-starter] Detected technologies:', technologies);
     sendMessage('loaded-scripts', { scripts: loadedScripts, technologies }, 'background');
   }

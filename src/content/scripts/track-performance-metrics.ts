@@ -12,7 +12,6 @@ export function trackPerformanceMetrics(performance:any) {
         dnsLookupTime: timing.domainLookupEnd - timing.domainLookupStart,
         tcpHandshakeTime: timing.connectEnd - timing.connectStart
       }
-      console.log('[chrome-ext-mv3-starter] Performance metrics:', metrics);
       sendMessage('performance-metrics', metrics, 'background');
     }
   }

@@ -10,6 +10,5 @@ export function trackUserClicks(event) {
       innerText: element.innerText?.slice(0, 100),
       href: element.href || null
     }
-    console.log('[chrome-ext-mv3-starter] User clicked on:', clickData)
     sendMessage('user-clicks', clickData, 'background')
   }
