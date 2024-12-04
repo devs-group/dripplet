@@ -48,12 +48,19 @@ export const accessTokenStorage = useLocalStorage<string | null>('access-token',
   listenToStorageChanges: true
 })
 
+export const firstTimeUserStorage = useLocalStorage('first-time-user', 'true', {
+  listenToStorageChanges: true
+})
+
+
 // Function to clear all storage
 export const clearAllStorage = () => {
   solanaPublicKeyStorage.value = ''
   trackBrowsingStorage.value = 'true'
   trackInteractionsStorage.value = 'true'
   crawlWebsitesStorage.value = 'true'
+  accessTokenStorage.value = null
+  firstTimeUserStorage.value = 'true'
   emailNotificationsStorage.value = 'true'
   browserNotificationsStorage.value = 'true'
   accessTokenStorage.value = null
