@@ -17,6 +17,10 @@
         </p>
       </div>
 
+      <div class="mt-4">
+        <LineChart />
+      </div>
+
       <div class="mt-4 w-full">
         <h3 class="text-lg font-semibold mb-2">Tracking Options</h3>
         <div class="flex flex-col items-start w-full">
@@ -91,6 +95,7 @@ import { onMounted } from 'vue'
 import { storage } from '~/logic/storage'
 import { handleLogout, getUserProfile, UserProfile } from '../logic'
 import { useRouter } from 'vue-router'
+import LineChart from '../components/charts/LineChart.vue'
 
 const userProfile = ref<UserProfile>()
 
