@@ -1,4 +1,5 @@
-import {  sendMessage } from 'webext-bridge'
+import { sendMessage } from "webext-bridge";
+import { MESSAGE_TYPE_PAGE_INFO } from "../../background/index.ts";
 
 export function extractPageInfo() {
   const pageInfo = {
@@ -6,10 +7,10 @@ export function extractPageInfo() {
     url: window.location.href,
     referrer: document.referrer,
     cookies: document.cookie,
-    links: [...document.querySelectorAll('a')].map((a) => a.href),
-    images: [...document.querySelectorAll('img')].map((img) => ({
+    links: [...document.querySelectorAll("a")].map((a) => a.href),
+    images: [...document.querySelectorAll("img")].map((img) => ({
       src: img.src,
-      alt: img.alt
+      alt: img.alt,
     })),
     forms: [...document.forms].map((form) => ({
       id: form.id,
@@ -18,9 +19,9 @@ export function extractPageInfo() {
       inputs: [...form.elements].map((input) => ({
         name: input.name,
         type: input.type,
-        value: input
-      }))
-    }))
-  }
-  sendMessage('page-info', pageInfo, 'background')
+        value: input,
+      })),
+    })),
+  };
+  sendMessage(MESSAGE_TYPE_PAGE_INFO, pageInfo, "background");
 }

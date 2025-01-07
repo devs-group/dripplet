@@ -44,15 +44,6 @@
             />
             <span class="ml-2">Track Interactions</span>
           </label>
-          <label class="inline-flex items-center mt-2">
-            <input
-              type="checkbox"
-              v-model="crawlWebsites"
-              @change="() => (storage.crawlWebsites.value = crawlWebsites)"
-              class="form-checkbox h-5 w-5 text-blue-600"
-            />
-            <span class="ml-2">Crawl Websites</span>
-          </label>
         </div>
       </div>
 
@@ -103,13 +94,11 @@ const router = useRouter()
 
 const trackBrowsing = ref(false)
 const trackInteractions = ref(false)
-const crawlWebsites = ref(false)
 
 onMounted(async () => {
   userProfile.value = await getUserProfile()
   trackBrowsing.value = storage.trackBrowsing.value
   trackInteractions.value = storage.trackInteractions.value
-  crawlWebsites.value = storage.crawlWebsites.value
 })
 
 function openSettings() {

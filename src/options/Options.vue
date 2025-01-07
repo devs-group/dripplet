@@ -90,17 +90,6 @@
                   >Track Interactions</span
                 >
               </label>
-              <label class="flex items-center space-x-3">
-                <input
-                  type="checkbox"
-                  v-model="crawlWebsites"
-                  class="form-checkbox h-5 w-5 text-blue-600"
-                  @change="updateTracking"
-                />
-                <span class="text-gray-700 dark:text-gray-300"
-                  >Crawl Websites</span
-                >
-              </label>
             </div>
           </section>
 
@@ -147,13 +136,11 @@ import { storage, clearAllStorage } from '~/logic/storage'
 const solanaPublicKey = ref('')
 const trackBrowsing = ref(false)
 const trackInteractions = ref(false)
-const crawlWebsites = ref(false)
 
 onMounted(async () => {
   solanaPublicKey.value = storage.solanaPublicKey.value
   trackBrowsing.value = storage.trackBrowsing.value
   trackInteractions.value = storage.trackInteractions.value
-  crawlWebsites.value = storage.crawlWebsites.value
 })
 
 const handleLogout = () => {
@@ -181,7 +168,6 @@ const updateTracking = async () => {
     data: {
       trackBrowsing: storage.trackBrowsing.value === true,
       trackInteractions: storage.trackInteractions.value === true,
-      crawlWebsites: storage.crawlWebsites.value === true
     }
   })
 }

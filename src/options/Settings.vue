@@ -45,15 +45,6 @@
                 />
                 <span class="text-gray-700 dark:text-gray-300">Track Interactions</span>
               </label>
-              <label class="flex items-center space-x-3">
-                <input
-                  type="checkbox"
-                  v-model="crawlWebsites"
-                  class="form-checkbox h-5 w-5 text-blue-600"
-                  @change="updateTracking"
-                />
-                <span class="text-gray-700 dark:text-gray-300">Crawl Websites</span>
-              </label>
             </div>
           </section>
 
@@ -95,7 +86,6 @@ import { useStorage } from '@vueuse/core'
 const email = ref('')
 const trackBrowsing = useStorage('trackBrowsing', true)
 const trackInteractions = useStorage('trackInteractions', true)
-const crawlWebsites = useStorage('crawlWebsites', true)
 const emailNotifications = useStorage('emailNotifications', true)
 const browserNotifications = useStorage('browserNotifications', true)
 
@@ -109,7 +99,6 @@ const updateTracking = async () => {
   console.log('Tracking settings updated:', {
     trackBrowsing: trackBrowsing.value,
     trackInteractions: trackInteractions.value,
-    crawlWebsites: crawlWebsites.value,
   })
 }
 

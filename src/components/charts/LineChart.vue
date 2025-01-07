@@ -33,5 +33,4 @@ const data = [
   { value: 278, day: 'F' },
   { value: 189, day: 'S' }
 ]
-const labels = (d: Data) => d.day
 </script>
