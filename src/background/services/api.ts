@@ -1,46 +1,66 @@
-interface ApiResponse {
-  success: boolean;
-  error?: string;
-}
-
-class ApiService {
-  private baseUrl: string;
+export class ApiService {
+  private baseUrl: string
 
   constructor() {
-    this.baseUrl = "http://localhost:1991"; // replace this later
+    this.baseUrl = 'http://localhost:1991'
   }
 
-  public async makeRequest(data: any): Promise<ApiResponse> {
-    const token = await new Promise<string | null>((resolve) => {
-      chrome.storage.local.get(["accessToken"], (result) => {
-        resolve(result.accessToken || null);
-      });
-    });
-
+  private async getAccessToken(): Promise<string | null> {
+    const key = 'accessToken'
+    const token = await chrome.storage.local.get(key)
     if (!token) {
-      console.error("No authentication token found");
-      return { success: false, error: "No authentication token found" };
+      console.error('No authentication token found')
+      return null
+    }
+    return token[key]
+  }
+
+  public async post<T>({ endpoint, body }: { endpoint: string; body: any }) {
+    const token = await this.getAccessToken()
+    if (!token) {
+      throw new Error(`Token could not be found in local storage`)
     }
 
     try {
-      const response = await fetch(`${this.baseUrl}/collect/client-event`, {
-        method: "POST",
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ event: data }),
-      });
+        body: JSON.stringify(body)
+      })
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      return { success: true };
+      return response.json() as T
     } catch (error) {
-      console.error("API request failed:", error);
-      return { success: false, error: error as string };
+      throw new Error(`HTTP error! error: ${error}`)
+    }
+  }
+
+  public async get<T>({ endpoint }: { endpoint: string }) {
+    const token = await this.getAccessToken()
+    if (!token) {
+      throw new Error(`Token could not be found in local storage`)
+    }
+
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      return response.json() as T
+    } catch (error) {
+      throw new Error(`HTTP error! error: ${error}`)
     }
   }
 }
-
-export const apiService = new ApiService();

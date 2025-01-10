@@ -18,8 +18,7 @@
 import { ref, onMounted } from 'vue'
 import IntroSlider from '../components/IntroSlider.vue'
 import Button from '../components/buttons/Button.vue'
-import { storage } from '../logic/storage'
-import { handleLogin, fetchUserProfile, UserProfile } from '../logic'
+import { handleLogin, UserProfile, getUserProfile } from '../logic'
 import { useRouter } from 'vue-router'
 
 const loading = ref(false)
@@ -32,30 +31,23 @@ const onLoginClick = async () => {
   loading.value = true
   error.value = null
 
-  try {
-    const accessToken = await handleLogin()
-    if (accessToken) {
-      storage.accessToken.value = accessToken
-      userProfile.value = await fetchUserProfile(accessToken)
-      storage.isFirstTimeUser.value = false
-      router.push('/')
-    }
-  } catch (err: any) {
-    console.error(err)
-    error.value =
-      err.message || 'An unexpected error occurred. Please try again.'
-  } finally {
-    loading.value = false
-  }
+  handleLogin()
+    .then(async () => {
+      userProfile.value = await getUserProfile()
+      console.log(userProfile.value)
+      console.log('redirecting...')
+      await router.push('/')
+      console.log('redirected')
+    })
+    .catch((err) => {
+      console.error(err)
+      error.value =
+        err.message || 'An unexpected error occurred. Please try again.'
+    })
+    .finally(() => (loading.value = false))
 }
 
-// Restore session on mount
 onMounted(async () => {
-  chrome.storage.local.get(['accessToken', 'userProfile'], (result) => {
-    if (result.accessToken) {
-      storage.accessToken.value = result.accessToken
-      userProfile.value = result.userProfile || null
-    }
-  })
+  userProfile.value = await getUserProfile()
 })
 </script>

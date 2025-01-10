@@ -1,10 +1,13 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { storage } from '~/logic/storage'
 import AuthView from './Auth.vue'
 import PopupView from './Popup.vue'
 import { computed } from 'vue'
 
-const isAuthenticated = computed(() => !!storage.accessToken.value)
+const isAuthenticated = computed(async () => {
+  const key = 'accessToken'
+  const result = await chrome.storage.local.get(key)
+  return result[key]
+})
 
 const routes = [
   { path: '/', component: PopupView },

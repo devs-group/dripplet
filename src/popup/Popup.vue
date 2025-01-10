@@ -13,7 +13,7 @@
       <div class="mt-4 bg-gray-100 dark:bg-gray-800 p-3 rounded-md w-full">
         <h2 class="text-black">Curernt earnings</h2>
         <p class="text-lg font-semibold text-black font-mono">
-          1.234.030,32 $DRIPL
+          {{ formattedCredits }} $DRIPL
         </p>
       </div>
 
@@ -82,24 +82,41 @@
   </main>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { storage } from '~/logic/storage'
 import { handleLogout, getUserProfile, UserProfile } from '../logic'
+import { UserApiService } from '~/background/services/user'
 import { useRouter } from 'vue-router'
 import LineChart from '../components/charts/LineChart.vue'
 
-const userProfile = ref<UserProfile>()
-
 const router = useRouter()
 
+const userProfile = ref<UserProfile>()
 const trackBrowsing = ref(false)
 const trackInteractions = ref(false)
+const credits = ref(0)
 
-onMounted(async () => {
+const formattedCredits = computed(() => formatCreditsNumber(credits.value))
+
+onMounted(() => {
+  setCurrentUserProfile()
+  setCurrentUserCredits()
+  setInitialTrackingSettings()
+})
+
+async function setCurrentUserProfile() {
   userProfile.value = await getUserProfile()
+}
+
+async function setCurrentUserCredits() {
+  const userApiService = new UserApiService()
+  const response = await userApiService.getUserCredits()
+  credits.value = response.credits
+}
+
+function setInitialTrackingSettings() {
   trackBrowsing.value = storage.trackBrowsing.value
   trackInteractions.value = storage.trackInteractions.value
-})
+}
 
 function openSettings() {
   chrome.runtime.openOptionsPage()
@@ -112,5 +129,13 @@ async function onClickLogout() {
   } catch (err) {
     // TODO: show error notification here.
   }
+}
+
+function formatCreditsNumber(credits: number) {
+  return new Intl.NumberFormat('de-DE', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(credits)
 }
 </script>
